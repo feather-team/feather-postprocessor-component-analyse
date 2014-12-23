@@ -2,7 +2,6 @@
 
 //COMPONENT分析
 var COMPONENT_REG = /<!--(?:(?!\[if [^\]]+\]>)[\s\S])*?-->|<\?php\s*\$this->component\(\s*['"]([^'"]+)['"]/ig;
-var path = require('path');
 
 module.exports = function(content, file){
     var rules = feather.config.get('template.componentRules'), suffix = feather.config.get('template.suffix');
@@ -16,10 +15,10 @@ module.exports = function(content, file){
             });
 
             if(path[0] != '/'){
-                var tmpFile = path[0] == '.' ? (new feather.file(path.resolve(relative, path))) : feather.file.wrap(path);
+                var tmpFile;
 
                 if(path[0] == '.'){
-                    tmpFile = (new feather.file(path.resolve(relative, path)));
+                    tmpFile = (new feather.file(require('path').resolve(file.dirname, path)));
                 }else{
                     path = 'component/' + path;
                     tmpFile = feather.file.wrap(path);
