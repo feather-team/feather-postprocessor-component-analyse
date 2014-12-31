@@ -1,15 +1,23 @@
 'use strict';
 
 //COMPONENT分析
-var COMPONENT_REG = /<!--(?:(?!\[if [^\]]+\]>)[\s\S])*?-->|<\?php\s*\$this->component\(\s*['"]([^'"]+)['"]/ig;
+/*
+<?php $this->component(xxx)
+<component name="xxx"></component>
+<component name="xxx">
+<component name="xxx" />
+<component>xxx</component>
+*/
+var COMPONENT_REG = /<!--(?:(?!\[if [^\]]+\]>)[\s\S])*?-->|<\?php\s*\$this->component\(\s*['"]([^'"]+)['"]([\s\S]*?(?:\?>|$))|<component(?: [\s\S]*?name=['"]([^'"]+)['"])?[^>]*>(?:([\s\S]*?)<\/component>)?/ig;
+var staticMode = feather.config.get('staticMode'), root = feather.project.getProjectPath();
 
 module.exports = function(content, file){
     var rules = feather.config.get('template.componentRules'), suffix = feather.config.get('template.suffix');
 
-    return content.replace(COMPONENT_REG, function(all, $1, $2){
-        if($1){
-            var path = $1;
+    return content.replace(COMPONENT_REG, function(all, $1, $1e, $2, $3){
+        var path = $1 || $2 || $3;
 
+        if(path){
             rules.forEach(function(rule){
                 path = path.replace(rule[0], rule[1]);
             });
@@ -35,9 +43,20 @@ module.exports = function(content, file){
 
             path = path.replace(/\/+/, '/').replace(/\.[^\.]+$/, '.' + suffix);
 
-            file.addRequire(path);
+            if(staticMode){
+                var tmpFile = new feather.file(root + path);
 
-            return "<?php $this->load('" + path + "'";
+                if(tmpFile.exists()){
+                    feather.compile(tmpFile);
+                    return tmpFile.getContent();
+                }else{
+                    feather.console.warn(file.subpath + ':load ' + path + ' is not exists!');
+                    return '';
+                }
+            }else{
+                file.addRequire(path);
+                return "<?php $this->load('" + path + "'" + ($1e || ');?>');
+            }
         }
 
         return all;
