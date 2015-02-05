@@ -48,6 +48,12 @@ module.exports = function(content, file){
 
                 if(tmpFile.exists()){
                     feather.compile(tmpFile);
+
+                    if(tmpFile.cache){
+                        file.cache.mergeDeps(tmpFile.cache);
+                    }
+                    file.cache.addDeps(tmpFile.realpath || tmpFile);
+
                     return tmpFile.getContent();
                 }else{
                     feather.console.warn(file.subpath + ':load ' + path + ' is not exists!');
