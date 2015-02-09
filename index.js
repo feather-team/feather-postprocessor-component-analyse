@@ -14,6 +14,8 @@ var staticMode = feather.config.get('staticMode'), root = feather.project.getPro
 module.exports = function(content, file){
     var rules = feather.config.get('template.componentRules'), suffix = feather.config.get('template.suffix');
 
+    file.extras.components = [];
+
     return content.replace(COMPONENT_REG, function(all, $1, $1e, $2, $3){
         var path = $1 || $2 || $3;
 
@@ -60,7 +62,7 @@ module.exports = function(content, file){
                     return '';
                 }
             }else{
-                file.addRequire(path);
+                file.extras.components.push(path);
                 return "<?php $this->load('" + path + "'" + ($1e || ');?>');
             }
         }
