@@ -54,7 +54,12 @@ module.exports = function(content, file){
                     if(tmpFile.cache){
                         file.cache.mergeDeps(tmpFile.cache);
                     }
+                    
                     file.cache.addDeps(tmpFile.realpath || tmpFile);
+
+                    ['headJs', 'bottomJs', 'css'].forEach(function(type){
+                        file.extras[type] = (file.extras[type] || []).concat(tmpFile.extras[type]);
+                    });
 
                     return tmpFile.getContent();
                 }else{
