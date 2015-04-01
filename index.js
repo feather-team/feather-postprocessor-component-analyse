@@ -71,7 +71,7 @@ module.exports = function(content, file){
                     }
                 }else{
                     file.extras.components.push(path);
-                    return $1b + "$this->load('" + path + "'" + ($2e || ');?>');
+                    return ($1b || '<?php ') + "$this->load('" + path + "'" + ($2e || ');?>');
                 }
             }
         }

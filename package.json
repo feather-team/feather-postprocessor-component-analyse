@@ -1,6 +1,6 @@
 {
   "name": "feather-postprocessor-component-analyse",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "feather postprocessor analyse components",
   "main": "index.js",
   "scripts": {
