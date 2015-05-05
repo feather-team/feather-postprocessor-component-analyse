@@ -8,7 +8,7 @@
 <component name="xxx" />
 <component>xxx</component>
 */
-var COMPONENT_REG = /<!--(?:(?!\[if [^\]]+\]>)[\s\S])*?-->|(<\?php [\s\S]*?)\$this->(component|load)\(\s*['"]([^'"]+)['"]([\s\S]*?(?:;|$))|<component(?: [\s\S]*?name=['"]([^'"]+)['"])?[^>]*>(?:([\s\S]*?)<\/component>)?/ig;
+var COMPONENT_REG = /<!--(?:(?!\[if [^\]]+\]>)[\s\S])*?-->|(<\?php (?:(?!\?>)[\s\S])*?)\$this->(component|load)\(\s*['"]([^'"]+)['"]([\s\S]*?(?:;|$))|<component(?: [\s\S]*?name=['"]([^'"]+)['"])?[^>]*>(?:([\s\S]*?)<\/component>)?/ig;
 var staticMode = feather.config.get('staticMode'), root = feather.project.getProjectPath();
 
 module.exports = function(content, file){
